@@ -8,7 +8,7 @@ http://www.acsip.com.tw/product_ii.html?gID=69
 
 Start by cloning the tree
 
-`git clone https://github.com/AcSiP/linkit-smart-uboot.git`
+`git clone https://github.com/AcSiP/linkit-smart-7688-uboot.git`
 
 We need to install the cross toolchain required to build the source
 
