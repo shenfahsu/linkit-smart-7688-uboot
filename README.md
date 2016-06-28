@@ -5,7 +5,7 @@ This feeds holds the UBoot bootloader source code for the LinkIt Smart 7688 (Duo
 
 Start by cloning the tree
 
-`git clone https://github.com/MediaTek-Labs/linkit-smart-uboot.git`
+`git clone https://github.com/AcSiP/linkit-smart-uboot.git`
 
 We need to install the cross toolchain required to build the source
 
