@@ -199,18 +199,18 @@
 #endif
 
 
-#define SHOW_VER_STR()	\
-	do {	\
-		printf("============================================ \n"); \
-		printf("Ralink UBoot Version: %s\n", RALINK_LOCAL_VERSION); \
-		printf("-------------------------------------------- \n"); \
-		printf("%s %s %s\n",CHIP_TYPE, CHIP_VERSION, GMAC_MODE); \
-		printf("DRAM component: %d Mbits %s\n", DRAM_COMPONENT, DDR_INFO); \
-		printf("DRAM bus: %d bit\n", DRAM_BUS); \
-		printf("Total memory: %d MBytes\n", DRAM_SIZE); \
-		printf("%s\n", FLASH_MSG); \
-		printf("%s\n", "Date:" __DATE__ "  Time:" __TIME__ ); \
-		printf("============================================ \n"); \
-	}while(0)
+//#define SHOW_VER_STR()	\
+//	do {	\
+//		printf("============================================ \n"); \
+//		printf("Ralink UBoot Version: %s\n", RALINK_LOCAL_VERSION); \
+//		printf("-------------------------------------------- \n"); \
+//		printf("%s %s %s\n",CHIP_TYPE, CHIP_VERSION, GMAC_MODE); \
+//		printf("DRAM component: %d Mbits %s\n", DRAM_COMPONENT, DDR_INFO); \
+//		printf("DRAM bus: %d bit\n", DRAM_BUS); \
+//		printf("Total memory: %d MBytes\n", DRAM_SIZE); \
+//		printf("%s\n", FLASH_MSG); \
+//		printf("%s\n", "Date:" __DATE__ "  Time:" __TIME__ ); \
+//		printf("============================================ \n"); \
+//	}while(0)
 
 #endif	/* __VERSION_H__ */
