@@ -1795,7 +1795,7 @@ suzaku_config:	unconfig
 
 clean:
 	find . -type f \
-		\( -name 'core' -o -name '*.bak' -o -name '*~' \
+		\( -name 'core' -o -name '*~' \
 		-o -name '*.o'  -o -name '*.a'  \) -print \
 		| xargs rm -f
 	find ./ -name '.depend' -print | xargs rm -f
