@@ -95,27 +95,20 @@ int saveenv(void)
 	flash_sect_addr	= ((ulong)flash_addr) & ~(CFG_ENV_SECT_SIZE-1);
 	len	= CFG_ENV_SECT_SIZE;
 
-	/*
-	debug ( "copy old content: "
-		"sect_addr: %08lX  env_addr: %08lX  offset: %08lX\n",
-		flash_sect_addr, (ulong)flash_addr, flash_offset);
-	*/
+	debug ( "copy old content: sect_addr: %08lX  env_addr: %08lX  offset: %08lX\n", flash_sect_addr, (ulong)flash_addr, flash_offset);
 
 	/* copy old contents to temporary buffer */
-	if (raspi_read(env_buffer, flash_sect_addr, len) != len)
-		return 1;
+	if (raspi_read(env_buffer, flash_sect_addr, len) != len) return 1;
 
 	/* copy current environment to temporary buffer */
-	memcpy ((uchar *)((unsigned long)env_buffer + flash_offset),
-		env_ptr, CFG_ENV_SIZE);
+	memcpy ((uchar *)((unsigned long)env_buffer + flash_offset), env_ptr, CFG_ENV_SIZE);
 #else
 	flash_sect_addr = (ulong)flash_addr;
 	len	= CFG_ENV_SIZE;
 #endif	/* CFG_ENV_SECT_SIZE */
 
 	puts ("Erasing SPI Flash...\n");
-	if (raspi_erase(flash_sect_addr, len))
-		return 1;
+	if (raspi_erase(flash_sect_addr, len)) return 1;
 
 	puts ("Writing to SPI Flash...\n");
 	rc = raspi_write(env_buffer, flash_sect_addr, len);
