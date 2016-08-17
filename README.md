@@ -1,11 +1,14 @@
 # linkit-smart-uboot
-This feeds holds the UBoot bootloader source code for the LinkIt Smart 7688 (Duo)
+This feeds holds the UBoot bootloader source code for the AcSiP AI7688H
+
+http://www.acsip.com.tw/product_ii.html?gID=69
+
 
 # Compile
 
 Start by cloning the tree
 
-`git clone https://github.com/MediaTek-Labs/linkit-smart-uboot.git`
+`git clone https://github.com/AcSiP/linkit-smart-7688-uboot.git`
 
 We need to install the cross toolchain required to build the source
 
