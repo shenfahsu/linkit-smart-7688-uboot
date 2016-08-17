@@ -61,8 +61,8 @@
 #define OPCODE_BRRD		0x16
 #define OPCODE_BRWR		0x17
 
-#define ra_dbg(args...)
-/*#define ra_dbg(args...) do { if (1) printf(args); } while(0)*/
+//#define ra_dbg(args...)
+#define ra_dbg(args...)		do { if (1) printf(args); } while(0)
 
 #define SPI_FIFO_SIZE 16
 
@@ -127,10 +127,10 @@ static int bbu_spic_busy_wait(void)
 static int spic_transfer(const u8 *cmd, int n_cmd, u8 *buf, int n_buf, int flag)
 {
 	int retval = -1;
-	ra_dbg("cmd(%x): %x %x %x %x , buf:%x len:%x, flag:%s \n",
-			n_cmd, cmd[0], cmd[1], cmd[2], cmd[3],
-			(buf)? (*buf) : 0, n_buf,
-			(flag == SPIC_READ_BYTES)? "read" : "write");
+//	ra_dbg("cmd(%x): %x %x %x %x , buf:%x len:%x, flag:%s \n",
+//			n_cmd, cmd[0], cmd[1], cmd[2], cmd[3],
+//			(buf)? (*buf) : 0, n_buf,
+//			(flag == SPIC_READ_BYTES)? "read" : "write");
 
 	// assert CS and we are already CLK normal high
 	ra_and(RT2880_SPI0_CTL_REG, ~(SPICTL_SPIENA_HIGH));
@@ -1567,6 +1567,78 @@ int ralink_spi_command(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		}
 		printf("\n");
 		free(p);
+	}
+	else if (!strncmp(argv[1], "dump_regs", 10)) {
+		unsigned int reg;
+
+		printf("===========================\n");
+		printf(" SPI Registers Dumping     \n");
+		printf("===========================\n");
+		reg = ra_inl( SPI_REG_CTL );		//SPI_TRANS
+		printf("SPI_TRANS\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_OPCODE );		//SPI_OP_ADDR
+		printf("SPI_OP_ADDR\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_MASTER );		//SPI_REG_MASTER
+		printf("SPI_REG_MASTER\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_MOREBUF );	//SPI_MORE_BUF
+		printf("SPI_MORE_BUF\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_Q_CTL );		//SPI_QUEUE_CTL
+		printf("SPI_QUEUE_CTL\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_CTL + 0x34 );	//SPI_STATUS
+		printf("SPI_STATUS\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_CTL + 0x38 );	//SPI_CS_POLAR
+		printf("SPI_CS_POLAR\t 0x%08X\n", reg );
+
+		reg = ra_inl( SPI_REG_SPACE_CR );	//SPI_SPACE
+		printf("SPI_SPACE\t 0x%08X\n", reg );
+		printf("===========================\n\n");
+	}
+	else if (!strncmp(argv[1], "dump", 5)) {
+		unsigned int	addr, len, r_len, buf_sz = 1024;
+		u8		*p;
+		int		i, j, k, rd_sz, dumped_sz;
+
+		addr = simple_strtoul(argv[2], NULL, 16);
+		len = simple_strtoul(argv[3], NULL, 16);
+
+		p = (u8 *)malloc( buf_sz );
+		if( !p ){
+			printf("malloc error\n");
+			return 0;
+		}
+
+		printf("=========================================================================\n");
+		for( i = 0; i < len;  ){
+			r_len = len - i;
+			if( r_len > buf_sz ) r_len = buf_sz;
+
+			rd_sz = raspi_read( p, addr, r_len ); //reuse len
+			dumped_sz = 0;
+			for( j = 0; j < rd_sz; ){
+				for( k = 0; k < 16 && dumped_sz < rd_sz ; k++ ){
+					if( k == 0 )		printf( "0x%08X  ", addr + dumped_sz );
+					if( k == 4 || k == 12 )	printf( " -" );
+					if( k == 8 )		printf( " --" );
+
+					printf( " %02X", p[ dumped_sz + k ] );
+				}
+				printf( "\n" );
+				if( k == 0 ) break;
+				dumped_sz += k;
+				j += k;
+			}
+			addr += rd_sz;
+			i += rd_sz;
+		}
+		printf("=========================================================================\n");
+		printf("\n");
+		free( p );
 	}
 	else if (!strncmp(argv[1], "erase", 6)) {
 		unsigned int o, l;
