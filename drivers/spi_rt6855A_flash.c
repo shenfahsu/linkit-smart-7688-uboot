@@ -727,21 +727,19 @@ static int raspi_read_scur(u8 *val)
 
 static int raspi_4byte_mode(int enable)
 {
-	ssize_t retval;
-	
+	ssize_t		retval = 0;
+
 	raspi_wait_ready(1);
 
-	if (spi_chip_info->id == 0x1) // Spansion
-	{
+	if (spi_chip_info->id == 0x1){		// Spansion
 		u8 br, br_cfn; // bank register
+
 #ifdef USER_MODE
-		if (enable)
-		{
+		if (enable){
 			br = 0x81;
 			ra_or(RT2880_SPICFG_REG, SPICFG_ADDRMODE);
 		}
-		else
-		{
+		else{
 			br = 0x0;
 			ra_and(RT2880_SPICFG_REG, ~(SPICFG_ADDRMODE));
 		}
@@ -764,16 +762,15 @@ static int raspi_4byte_mode(int enable)
 
 		raspi_write_rg(OPCODE_BRWR, &br);
 		raspi_read_rg(OPCODE_BRRD, &br_cfn);
-		if (br_cfn != br)
-		{
+		if (br_cfn != br){
 			printf("4B mode switch failed %d, %x, %x\n", enable, br_cfn, br);
 			return -1;
 		}
 
 	}
-	else
-	{
+	else{
 		u8 code;
+
 #ifdef COMMAND_MODE
 		u32 user;
 #endif
@@ -1057,7 +1054,7 @@ int raspi_read(char *buf, unsigned int from, int len)
 	u8 code;
 #endif
 
-	ra_dbg("%s: from:%x len:%x \n", __func__, from, len);
+//	ra_dbg("%s: from:%x len:%x \n", __func__, from, len);
 
 	/* sanity checks */
 	if (len == 0)
