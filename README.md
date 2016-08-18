@@ -1,7 +1,8 @@
 # linkit-smart-uboot
 This feeds holds the UBoot bootloader source code for the AcSiP AI7688H
 
-http://www.acsip.com.tw/product_ii.html?gID=69
+http://www.acsip.com.tw/index.php?action=products-detail&fid1=11&fid2=21&fid3=23&id=29
+
 
 
 # Compile
