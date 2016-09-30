@@ -2079,8 +2079,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			if ((my_tmp = tstc()) != 0) {	/* we got a key press	*/
 				timer1 = 0;	/* no more delay	*/
 				BootType = getc();
-				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9') && (BootType != 'b') && (BootType != 'm') && (BootType != 'c'))
-					BootType = '3';
+				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9'))//20160923, rayoslee, check it out
+					;//BootType = '3';//don't assign default BootType
 				printf("\n\rYou choosed %c\n\n", BootType);
 				break;
 			}
@@ -2529,8 +2529,16 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 #endif // RALINK_UPGRADE_BY_USB //
 
 		default:
-			printf("   \nSystem Boot Linux via Flash.\n");
-			do_bootm(cmdtp, 0, 1, argv);
+			if(timer1 > 0)//keep reset if choose wrong BootType
+			{
+			    printf("   \nReset Now..\n");
+				do_reset(cmdtp, 0, argc, argv);
+			}
+			else//it's time to go kernel
+			{
+			  printf("   \nSystem Boot Linux via Flash.\n");
+			  do_bootm(cmdtp, 0, 1, argv);
+			}
 			break;            
 		} /* end of switch */   
 
