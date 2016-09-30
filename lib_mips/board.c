@@ -2529,16 +2529,10 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 #endif // RALINK_UPGRADE_BY_USB //
 
 		default:
-			if(timer1 > 0)//keep reset if choose wrong BootType
-			{
+		
 			    printf("   \nReset Now..\n");
 				do_reset(cmdtp, 0, argc, argv);
-			}
-			else//it's time to go kernel
-			{
-			  printf("   \nSystem Boot Linux via Flash.\n");
-			  do_bootm(cmdtp, 0, 1, argv);
-			}
+		
 			break;            
 		} /* end of switch */   
 
