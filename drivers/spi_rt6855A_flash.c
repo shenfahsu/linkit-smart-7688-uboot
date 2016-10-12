@@ -61,8 +61,8 @@
 #define OPCODE_BRRD		0x16
 #define OPCODE_BRWR		0x17
 
-//#define ra_dbg(args...)
-#define ra_dbg(args...)		do { if (1) printf(args); } while(0)
+#define ra_dbg(args...)
+//#define ra_dbg(args...)		do { if (1) printf(args); } while(0)
 
 #define SPI_FIFO_SIZE 16
 
@@ -127,10 +127,10 @@ static int bbu_spic_busy_wait(void)
 static int spic_transfer(const u8 *cmd, int n_cmd, u8 *buf, int n_buf, int flag)
 {
 	int retval = -1;
-//	ra_dbg("cmd(%x): %x %x %x %x , buf:%x len:%x, flag:%s \n",
-//			n_cmd, cmd[0], cmd[1], cmd[2], cmd[3],
-//			(buf)? (*buf) : 0, n_buf,
-//			(flag == SPIC_READ_BYTES)? "read" : "write");
+	ra_dbg("cmd(%x): %x %x %x %x , buf:%x len:%x, flag:%s \n",
+			n_cmd, cmd[0], cmd[1], cmd[2], cmd[3],
+			(buf)? (*buf) : 0, n_buf,
+			(flag == SPIC_READ_BYTES)? "read" : "write");
 
 	// assert CS and we are already CLK normal high
 	ra_and(RT2880_SPI0_CTL_REG, ~(SPICTL_SPIENA_HIGH));
@@ -727,19 +727,21 @@ static int raspi_read_scur(u8 *val)
 
 static int raspi_4byte_mode(int enable)
 {
-	ssize_t		retval = 0;
-
+	ssize_t retval;
+	
 	raspi_wait_ready(1);
 
-	if (spi_chip_info->id == 0x1){		// Spansion
+	if (spi_chip_info->id == 0x1) // Spansion
+	{
 		u8 br, br_cfn; // bank register
-
 #ifdef USER_MODE
-		if (enable){
+		if (enable)
+		{
 			br = 0x81;
 			ra_or(RT2880_SPICFG_REG, SPICFG_ADDRMODE);
 		}
-		else{
+		else
+		{
 			br = 0x0;
 			ra_and(RT2880_SPICFG_REG, ~(SPICFG_ADDRMODE));
 		}
@@ -762,13 +764,15 @@ static int raspi_4byte_mode(int enable)
 
 		raspi_write_rg(OPCODE_BRWR, &br);
 		raspi_read_rg(OPCODE_BRRD, &br_cfn);
-		if (br_cfn != br){
+		if (br_cfn != br)
+		{
 			printf("4B mode switch failed %d, %x, %x\n", enable, br_cfn, br);
 			return -1;
 		}
 
 	}
-	else{
+	else
+	{
 		u8 code;
 
 #ifdef COMMAND_MODE
@@ -1055,7 +1059,7 @@ int raspi_read(char *buf, unsigned int from, int len)
 	u8 code;
 #endif
 
-//	ra_dbg("%s: from:%x len:%x \n", __func__, from, len);
+	ra_dbg("%s: from:%x len:%x \n", __func__, from, len);
 
 	/* sanity checks */
 	if (len == 0)

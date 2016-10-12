@@ -2061,11 +2061,34 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		}
 	} else {
 		unsigned char mfg_mac[6] = { 0x00, 0x0c, 0x43, 0xe1, 0x76, 0x28 };
+		unsigned char mfg2_mac[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+		unsigned char mfg3_mac[6] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+		
 		raspi_read((char *) CFG_LOAD_ADDR, 0x40004, 6);
-
-		if (!memcmp((void *) CFG_LOAD_ADDR, mfg_mac, 6)) {
+        
+		//if ( !memcmp((void *) CFG_LOAD_ADDR, mfg_mac, 6) ) {
+		if ( (memcmp((void *) CFG_LOAD_ADDR, mfg_mac, 6)==0) || (memcmp((void *) CFG_LOAD_ADDR, mfg2_mac, 6)==0) || (memcmp((void *) CFG_LOAD_ADDR, mfg3_mac, 6)==0) ) {
 			BootType = 'm';
 			printf("mfg mac detected\n");
+			
+			char *cBD;
+			int iBD;
+			cBD = getenv("BackDoor");
+			iBD = (int)simple_strtol(cBD, NULL, 10) + 1;
+			cBD = (char)(iBD+'0');
+			
+			setenv("BackDoor", &cBD);
+		    saveenv();
+			
+			if(iBD >= 2)
+			{
+			  BootType = '4';
+			  printf("BackDoor(%c) detected\n", BootType);
+			  timer1=0;
+			  setenv("BackDoor", "0");
+			  saveenv();			  
+			}	
+			
 		}
 	}
 
@@ -2078,9 +2101,10 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		for (i=0; i<100; ++i) {
 			if ((my_tmp = tstc()) != 0) {	/* we got a key press	*/
 				timer1 = 0;	/* no more delay	*/
-				BootType = getc();
-				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9'))//20160923, rayoslee, check it out
-					;//BootType = '3';//don't assign default BootType
+				if(BootType != 'm') BootType = getc();
+                
+				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9') && (BootType != 'b') && (BootType != 'm') && (BootType != 'c'))
+					BootType = '3';
 				printf("\n\rYou choosed %c\n\n", BootType);
 				break;
 			}
@@ -2530,8 +2554,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 
 		default:
 		
-			    printf("   \nReset Now..\n");
-				do_reset(cmdtp, 0, argc, argv);
+			   	printf("   \nSystem Boot Linux via Flash.\n");
+				do_bootm(cmdtp, 0, 1, argv);
 		
 			break;            
 		} /* end of switch */   
