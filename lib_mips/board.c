@@ -2073,11 +2073,14 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			
 			char *cBD;
 			int iBD;
+            char buf[2];
 			cBD = getenv("BackDoor");
 			iBD = (int)simple_strtol(cBD, NULL, 10) + 1;
-			cBD = (char)(iBD+'0');
+            sprintf(buf, "%d", iBD);
+			//cBD = (char)(iBD+'0');
 			
-			setenv("BackDoor", &cBD);
+			//setenv("BackDoor", &cBD);
+            setenv("BackDoor", buf);
 		    saveenv();
 			
 			if(iBD >= 2)
