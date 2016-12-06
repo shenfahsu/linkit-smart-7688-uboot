@@ -727,7 +727,7 @@ static int raspi_read_scur(u8 *val)
 
 static int raspi_4byte_mode(int enable)
 {
-	ssize_t retval;
+	ssize_t retval = 0; //reset it for line 818
 	
 	raspi_wait_ready(1);
 
