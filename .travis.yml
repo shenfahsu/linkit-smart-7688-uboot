@@ -24,13 +24,13 @@ before_install:
 install:
  - echo 'Install Stage........'
  - echo 'Install cross platform tool chain...'
- - sudo tar -xjf buildroot-gcc342.tar.bz2 -C /opt/
+ - sudo tar -jxvf buildroot-gcc342.tar.bz2 -C /opt/
 # - echo 'cache components...'
 
 
 before_script:
  - echo 'Before Script Stage........'
-# - bundle exec rake build
+ - ls -l /opt/buildroot-gcc342
 # - bundle exec rake build
 
 
