@@ -36,7 +36,7 @@ before_script:
 
 script:
  - echo 'Script Stage........'
-# - bundle exec rake build
+ - make
 # - bundle exec rake builddoc
 
 
