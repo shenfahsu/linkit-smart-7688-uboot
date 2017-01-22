@@ -1,6 +1,9 @@
 
 language: c
 compiler: gcc
+dist: trusty
+sudo: required
+
 
 # safelist
 branches:
