@@ -24,7 +24,7 @@ before_install:
 install:
  - echo 'Install Stage........'
  - echo 'Install cross platform tool chain...'
- - [ ! -d /opt ] sudo mkdir /opt
+ - sudo mkdir /opt
  - sudo tar -jxvf buildroot-gcc342.tar.bz2 -C /opt/
 # - echo 'cache components...'
 
